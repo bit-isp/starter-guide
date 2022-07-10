@@ -1,0 +1,265 @@
+<!doctype html><html lang=zh dir=ltr>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="如果你希望关闭 terminal 窗口后，你的程序仍在服务器端运行，你可以试试 tmux 。">
+<meta name=theme-color content="#FFFFFF">
+<meta name=color-scheme content="light dark"><meta property="og:title" content="Tmux 简易教程">
+<meta property="og:description" content="如果你希望关闭 terminal 窗口后，你的程序仍在服务器端运行，你可以试试 tmux 。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://zeqiang-lai.github.io/ml-starter-guide/posts/tmux/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2022-06-20T00:00:00+00:00">
+<meta property="article:modified_time" content="2022-06-20T00:00:00+00:00">
+<title>Tmux 简易教程 | 深度学习新手村</title>
+<link rel=manifest href=/ml-starter-guide/manifest.json>
+<link rel=icon href=/ml-starter-guide/favicon.png type=image/x-icon>
+<link rel=stylesheet href=/ml-starter-guide/book.min.ddf4f7f7ade07930229f5b8f3c6265c0570d9885d29c73cbd01399fe84ef44bf.css integrity="sha256-3fT3963geTAin1uPPGJlwFcNmIXSnHPL0BOZ/oTvRL8=" crossorigin=anonymous>
+<script defer src=/ml-starter-guide/flexsearch.min.js></script>
+<script defer src=/ml-starter-guide/zh.search.min.dc905f271205b1a7081f468fc22a57c907c85757ce50365a5cb58ba7729cac13.js integrity="sha256-3JBfJxIFsacIH0aPwipXyQfIV1fOUDZaXLWLp3KcrBM=" crossorigin=anonymous></script>
+<script defer src=/ml-starter-guide/sw.min.63199c93eee3bef7fec83464366b3bd4a15ffb1409252dcc6345f3233334958f.js integrity="sha256-Yxmck+7jvvf+yDRkNms71KFf+xQJJS3MY0XzIzM0lY8=" crossorigin=anonymous></script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FKSXTP92RJ"></script>
+<script>var doNotTrack=!1;if(!doNotTrack){window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','G-FKSXTP92RJ',{anonymize_ip:!1})}</script>
+<style type=text/css media=screen>@media(prefers-color-scheme:dark){.chroma{color:#f8f8f2;background-color:#272822}.chroma .x{}.chroma .err{color:#960050;background-color:#1e0010}.chroma .lntd{vertical-align:top;padding:0;margin:0;border:0}.chroma .lntable{border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block}.chroma .hl{display:block;width:100%;background-color:#ffc}.chroma .lnt{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .ln{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .k{color:#66d9ef}.chroma .kc{color:#66d9ef}.chroma .kd{color:#66d9ef}.chroma .kn{color:#f92672}.chroma .kp{color:#66d9ef}.chroma .kr{color:#66d9ef}.chroma .kt{color:#66d9ef}.chroma .n{}.chroma .na{color:#a6e22e}.chroma .nb{}.chroma .bp{}.chroma .nc{color:#a6e22e}.chroma .no{color:#66d9ef}.chroma .nd{color:#a6e22e}.chroma .ni{}.chroma .ne{color:#a6e22e}.chroma .nf{color:#a6e22e}.chroma .fm{}.chroma .nl{}.chroma .nn{}.chroma .nx{color:#a6e22e}.chroma .py{}.chroma .nt{color:#f92672}.chroma .nv{}.chroma .vc{}.chroma .vg{}.chroma .vi{}.chroma .vm{}.chroma .l{color:#ae81ff}.chroma .ld{color:#e6db74}.chroma .s{color:#e6db74}.chroma .sa{color:#e6db74}.chroma .sb{color:#e6db74}.chroma .sc{color:#e6db74}.chroma .dl{color:#e6db74}.chroma .sd{color:#e6db74}.chroma .s2{color:#e6db74}.chroma .se{color:#ae81ff}.chroma .sh{color:#e6db74}.chroma .si{color:#e6db74}.chroma .sx{color:#e6db74}.chroma .sr{color:#e6db74}.chroma .s1{color:#e6db74}.chroma .ss{color:#e6db74}.chroma .m{color:#ae81ff}.chroma .mb{color:#ae81ff}.chroma .mf{color:#ae81ff}.chroma .mh{color:#ae81ff}.chroma .mi{color:#ae81ff}.chroma .il{color:#ae81ff}.chroma .mo{color:#ae81ff}.chroma .o{color:#f92672}.chroma .ow{color:#f92672}.chroma .p{}.chroma .c{color:#75715e}.chroma .ch{color:#75715e}.chroma .cm{color:#75715e}.chroma .c1{color:#75715e}.chroma .cs{color:#75715e}.chroma .cp{color:#75715e}.chroma .cpf{color:#75715e}.chroma .g{}.chroma .gd{color:#f92672}.chroma .ge{font-style:italic}.chroma .gr{}.chroma .gh{}.chroma .gi{color:#a6e22e}.chroma .go{}.chroma .gp{}.chroma .gs{font-weight:700}.chroma .gu{color:#75715e}.chroma .gt{}.chroma .gl{}.chroma .w{}}@media(prefers-color-scheme:light){.chroma{background-color:#f8f8f8}.chroma .x{}.chroma .err{}.chroma .lntd{vertical-align:top;padding:0;margin:0;border:0}.chroma .lntable{border-spacing:0;padding:0;margin:0;border:0;width:auto;overflow:auto;display:block}.chroma .hl{display:block;width:100%;background-color:#ffc}.chroma .lnt{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .ln{margin-right:.4em;padding:0 .4em;color:#7f7f7f}.chroma .k{color:#a2f;font-weight:700}.chroma .kc{color:#a2f;font-weight:700}.chroma .kd{color:#a2f;font-weight:700}.chroma .kn{color:#a2f;font-weight:700}.chroma .kp{color:#a2f}.chroma .kr{color:#a2f;font-weight:700}.chroma .kt{color:#0b0;font-weight:700}.chroma .n{}.chroma .na{color:#b44}.chroma .nb{color:#a2f}.chroma .bp{}.chroma .nc{color:#00f}.chroma .no{color:#800}.chroma .nd{color:#a2f}.chroma .ni{color:#999;font-weight:700}.chroma .ne{color:#d2413a;font-weight:700}.chroma .nf{color:#00a000}.chroma .fm{}.chroma .nl{color:#a0a000}.chroma .nn{color:#00f;font-weight:700}.chroma .nx{}.chroma .py{}.chroma .nt{color:green;font-weight:700}.chroma .nv{color:#b8860b}.chroma .vc{}.chroma .vg{}.chroma .vi{}.chroma .vm{}.chroma .l{}.chroma .ld{}.chroma .s{color:#b44}.chroma .sa{color:#b44}.chroma .sb{color:#b44}.chroma .sc{color:#b44}.chroma .dl{color:#b44}.chroma .sd{color:#b44;font-style:italic}.chroma .s2{color:#b44}.chroma .se{color:#b62;font-weight:700}.chroma .sh{color:#b44}.chroma .si{color:#b68;font-weight:700}.chroma .sx{color:green}.chroma .sr{color:#b68}.chroma .s1{color:#b44}.chroma .ss{color:#b8860b}.chroma .m{color:#666}.chroma .mb{color:#666}.chroma .mf{color:#666}.chroma .mh{color:#666}.chroma .mi{color:#666}.chroma .il{color:#666}.chroma .mo{color:#666}.chroma .o{color:#666}.chroma .ow{color:#a2f;font-weight:700}.chroma .p{}.chroma .c{color:#080;font-style:italic}.chroma .ch{color:#080;font-style:italic}.chroma .cm{color:#080;font-style:italic}.chroma .c1{color:#080;font-style:italic}.chroma .cs{color:#080;font-weight:700}.chroma .cp{color:#080}.chroma .cpf{color:#080}.chroma .g{}.chroma .gd{color:#a00000}.chroma .ge{font-style:italic}.chroma .gr{color:red}.chroma .gh{color:navy;font-weight:700}.chroma .gi{color:#00a000}.chroma .go{color:#888}.chroma .gp{color:navy;font-weight:700}.chroma .gs{font-weight:700}.chroma .gu{color:purple;font-weight:700}.chroma .gt{color:#04d}.chroma .gl{text-decoration:underline}.chroma .w{color:#bbb}}</style>
+<link rel=stylesheet href=/ml-starter-guide/css/clipboard.min.456f496a8e4e3c17a4539bc11c924c0037787518515ecb6f11c7740c76a2ffcd.css>
+</head>
+<body dir=ltr>
+<input type=checkbox class="hidden toggle" id=menu-control>
+<input type=checkbox class="hidden toggle" id=toc-control>
+<main class="container flex">
+<aside class=book-menu>
+<div class=book-menu-content>
+<nav>
+<h2 class=book-brand>
+<a class="flex align-center" href=/ml-starter-guide/><span>深度学习新手村</span>
+</a>
+</h2>
+<div class=book-search>
+<input type=text id=book-search-input placeholder=搜索 aria-label=搜索 maxlength=64 data-hotkeys=s/>
+<div class="book-search-spinner hidden"></div>
+<ul id=book-search-results></ul>
+</div>
+<ul class=book-languages>
+<li>
+<input type=checkbox id=languages class=toggle>
+<label for=languages class="flex justify-between">
+<a role=button class="flex align-center">
+<img src=/ml-starter-guide/svg/translate.svg class=book-icon alt=Languages>
+User
+</a>
+</label>
+<ul>
+<li>
+<a href=https://zeqiang-lai.github.io/ml-starter-guide/en/>
+Maintainer
+</a>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li class=book-section-flat>
+<a href=/ml-starter-guide/docs/share/>公共资源</a>
+<ul>
+<li>
+<input type=checkbox id=section-32337003e18f118a42d9d1022190d7e0 class=toggle>
+<label for=section-32337003e18f118a42d9d1022190d7e0 class="flex justify-between">
+<a href=/ml-starter-guide/docs/share/dataset/>数据集</a>
+</label>
+<ul>
+<li>
+<a href=/ml-starter-guide/docs/share/dataset/hsi/>光谱数据集</a>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/share/dataset/high-level/>High Level</a>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/share/dataset/other/>Other</a>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/share/dataset/restoration/>Restoration</a>
+</li>
+</ul>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/share/software/>软件</a>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/share/env/>Conda</a>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/share/cuda/>Cuda</a>
+</li>
+</ul>
+</li>
+<li class=book-section-flat>
+<span>论文写作</span>
+<ul>
+<li>
+<a href=/ml-starter-guide/docs/writing/cite_standard/>引用规范</a>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/writing/paper_search/>检索方法</a>
+</li>
+</ul>
+</li>
+<li class=book-section-flat>
+<span>其他</span>
+<ul>
+<li>
+<a href=/ml-starter-guide/docs/others/feedback/>反馈</a>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/others/open_source/>开源规范</a>
+</li>
+</ul>
+</li>
+<li>
+<a href=/ml-starter-guide/docs/recommend/>外部资源</a>
+</li>
+</ul>
+<ul>
+<li>
+<a href=/ml-starter-guide/posts/>
+博客
+</a>
+</li>
+<li>
+<a href=https://github.com/Zeqiang-Lai/ml-starter-guide target=_blank rel=noopener>
+Github
+</a>
+</li>
+</ul>
+</nav>
+<script>(function(){var a=document.querySelector("aside .book-menu-content");addEventListener("beforeunload",function(b){localStorage.setItem("menu.scrollTop",a.scrollTop)}),a.scrollTop=localStorage.getItem("menu.scrollTop")})()</script>
+</div>
+</aside>
+<div class=book-page>
+<header class=book-header>
+<div class="flex align-center justify-between">
+<label for=menu-control>
+<img src=/ml-starter-guide/svg/menu.svg class=book-icon alt=Menu>
+</label>
+<strong>Tmux 简易教程</strong>
+<label for=toc-control>
+<img src=/ml-starter-guide/svg/toc.svg class=book-icon alt="Table of Contents">
+</label>
+</div>
+<aside class="hidden clearfix">
+<nav id=TableOfContents>
+<ul>
+<li>
+<ul>
+<li><a href=#介绍>介绍</a></li>
+<li><a href=#效果>效果</a></li>
+<li><a href=#使用>使用</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</aside>
+</header>
+<article class=markdown>
+<h1>
+<a href=/ml-starter-guide/posts/tmux/>Tmux 简易教程</a>
+</h1>
+<h5>
+<span> 🍉 </span>
+|
+<span>June 20, 2022</span>
+</h5>
+<p>如果你希望关闭 terminal 窗口后，你的程序仍在服务器端运行，你可以试试 tmux 。</p>
+<h2 id=介绍>
+介绍
+<a class=anchor href=#%e4%bb%8b%e7%bb%8d>#</a>
+</h2>
+<p>一般来说，我们都是用自己电脑上的 vscode/pycharm 连接远程服务器跑实验。如果直接在 terminal 里输入指令，让程序运行起来，我们就不能退出 vscode/pycharm, 因为程序会终止。此外，自己电脑意外断网也会导致断连，程序终止。</p>
+<p>Tmux 就是一个在我们关闭了终端窗口再打开，会话并不终止，而是继续运行之前程序的工具。</p>
+<h2 id=效果>
+效果
+<a class=anchor href=#%e6%95%88%e6%9e%9c>#</a>
+</h2>
+<p>
+<img src=tmux_01.gif alt=example></p>
+<h2 id=使用>
+使用
+<a class=anchor href=#%e4%bd%bf%e7%94%a8>#</a>
+</h2>
+<p>首先， tmux 里有两个重要的概念：<strong>会话</strong> 和 <strong>窗口</strong>。</p>
+<p>其次，我们要知道：一个会话可以包含多个窗口。也就是说，我们可以新建一个会话，里面放好多窗口，每个窗口里跑不同的实验。</p>
+<p><strong>会话相关指令</strong></p>
+<ol>
+<li>新建会话</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>tmux new -s 会话名   <span class=c1># 也可以只输入 tmux, 这个会话会默认从 0 开始命名</span>
+</code></pre></div><ol start=2>
+<li>退出会话（需要时还可以进来）</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>Ctrl + b + d        <span class=c1># 不是指令哈，是按下键盘上的三个键</span>
+</code></pre></div><ol start=3>
+<li>列出全部的会话</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>tmux ls
+</code></pre></div><ol start=3>
+<li>恢复会话</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>tmux at -t 会话名
+</code></pre></div><ol start=4>
+<li>删除会话</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>tmux kill-session -t 会话名
+</code></pre></div><p><strong>在一个会话中，窗口相关指令</strong></p>
+<ol>
+<li>新建窗口</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>Ctrl + b + c
+</code></pre></div><ol start=2>
+<li>删除窗口</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>Ctrl + c      <span class=c1># 先把程序停掉</span>
+Ctrl + d      <span class=c1># 删除窗口</span>
+</code></pre></div><ol start=3>
+<li>重命名窗口</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>Ctrl + b + ,
+</code></pre></div><ol start=4>
+<li>切换当前显示的窗口</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>Ctrl + b + p  <span class=c1># 切换到上一窗口</span>
+Ctrl + b + n  <span class=c1># 切换到下一窗口</span>
+</code></pre></div><ol start=5>
+<li>默认的 tmux 对鼠标的点击和滑动功能不友好的</li>
+</ol>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-shell data-lang=shell>Ctrl + b + :  <span class=c1># 回车后再输入下一行的指令</span>
+<span class=nb>set</span> -g mouse on
+</code></pre></div></article>
+<script src=/ml-starter-guide/js/clipboard.min.d1339707ef2b3804bac2858e9ec2d4a56e8305692fedb18db3a498c0d3736058.js></script>
+<script async src=//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js></script>
+<link rel=stylesheet href=https://use.fontawesome.com/releases/v5.1.0/css/all.css integrity=sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt crossorigin=anonymous>
+<footer class=book-footer>
+<div class="flex flex-wrap justify-between">
+</div>
+<script>(function(){function a(c){const a=window.getSelection(),b=document.createRange();b.selectNodeContents(c),a.removeAllRanges(),a.addRange(b)}document.querySelectorAll("pre code").forEach(b=>{b.addEventListener("click",function(c){a(b.parentElement),navigator.clipboard&&navigator.clipboard.writeText(b.parentElement.textContent)})})})()</script>
+<div style=text-align:center;color:#585858>
+<span id=busuanzi_container_page_pv>累计访问:<span id=busuanzi_value_page_pv></span>次</span>
+</div>
+</footer>
+<label for=menu-control class="hidden book-menu-overlay"></label>
+</div>
+<aside class=book-toc>
+<div class=book-toc-content>
+<nav id=TableOfContents>
+<ul>
+<li>
+<ul>
+<li><a href=#介绍>介绍</a></li>
+<li><a href=#效果>效果</a></li>
+<li><a href=#使用>使用</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+</div>
+</aside>
+</main>
+</body>
+</html>
