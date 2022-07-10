@@ -1,1 +1,0 @@
-navigator.serviceWorker&&navigator.serviceWorker.register("/bit-isp/starter-guide/sw.js",{scope:"/bit-isp/starter-guide/"})
