@@ -7,10 +7,10 @@
 接下来，我们一起跟随着这份文档学习如何成为一名合格的维护人员 / an excellent contributor!
 维护人员必看系列 #  向新手村添加一个教程/修改页面需要以下几个步骤：
  把新手村所在的 github 仓库 拷贝到本地 在本地进行预览和修改 把你改好的版本 push 到 github 仓库  📢 我们来细说这三步要如何执行
-1. 把仓库拷贝到本地 #  git clone https://github.com/bit-isp/starter-guide.git cd starter-guide 2. 在本地进行预览和修改 #  这个网页是用 Hugo 写的，需要先安装 Hugo 来进行本地预览，根据你的操作系统选择安装方式
+1. 把仓库拷贝到本地 #  git clone https://github.com/bit-isp/starter-guide.git cd starter-guide git submodule update --init --recursive	# 克隆依赖模块 2. 在本地进行预览和修改 #  这个网页是用 Hugo 写的，需要先安装 Hugo 来进行本地预览，根据你的操作系统选择安装方式
 Windows Windows #    安装 chocolate
 以管理员身份打开 PowerShell, 运行下面这行指令
-Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))   用 chocolata 安装 Hugo">
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.">
 <meta name=theme-color content="#FFFFFF">
 <meta name=color-scheme content="light dark"><meta property="og:title" content>
 <meta property="og:description" content>
@@ -193,6 +193,8 @@ Github
 </h3>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>git clone https://github.com/bit-isp/starter-guide.git
 <span class=nb>cd</span> starter-guide
+
+git submodule update --init --recursive	<span class=c1># 克隆依赖模块</span>
 </code></pre></div><h3 id=2-在本地进行预览和修改>
 2. 在本地进行预览和修改
 <a class=anchor href=#2-%e5%9c%a8%e6%9c%ac%e5%9c%b0%e8%bf%9b%e8%a1%8c%e9%a2%84%e8%a7%88%e5%92%8c%e4%bf%ae%e6%94%b9>#</a>
